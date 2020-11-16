@@ -8,10 +8,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.hateoas.*;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -57,6 +61,17 @@ class TaskController {
         return ResponseEntity.noContent().build();
     }
 
+    @Transactional
+    @PatchMapping("/tasks/{id}")
+    public ResponseEntity<?> toggleTask(@PathVariable("id") int id, @RequestBody @Valid HashMap<String,Object> requestBody){
+        if(!repository.existsById(id)) {
+            return ResponseEntity.notFound().build();
+        }
+
+        repository.findById(id).ifPresent(task -> task.setDone(!task.isDone()));
+        return ResponseEntity.noContent().build();
+    }
+
     @PostMapping("/tasks")
     ResponseEntity<Task> createTask(@RequestBody @Valid Task toCreate) {
         Task result = repository.save(toCreate);
@@ -67,4 +82,16 @@ class TaskController {
     ResponseEntity<List<Task>> findByDone(Boolean state){
         return ResponseEntity.ok(repository.findByDone(state));
     }
+
+//    @GetMapping(value = "tasks/search/done", params = "state")
+//    @RequestMapping(value = "tasks/search/done", params = "state")
+//    ResponseEntity<?> findByDone(Boolean state){
+//        Hateoas resources = new Hateoas(repository.findByDone(state));
+//
+//        resources.add(linkTo(methodOn(Hateoas.class).
+//        resources.add(linkTo(methodOn(Hateoas.class).getTasks()).withSelfRel());
+//        resources.add(resources.getTasks());
+//        return ResponseEntity.ok(resources);
+//        return ResponseEntity.ok(repository.findByDone(state));
+//    }
 }

@@ -1,0 +1,10 @@
+spring:
+  h2:
+    console:
+      enabled: true
+      path: "/console"
+  datasource:
+    url: "jdbc:h2:file:C:/Users/pavel/IdeaProjects/todo-app/todo-app/db"
+  jpa:
+    hibernate:
+      ddl-auto: validate

@@ -2,8 +2,11 @@ package io.github.mat3e.model;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.rest.core.annotation.RestResource;
+import org.springframework.data.rest.webmvc.json.JsonSchema;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "tasks")
@@ -17,16 +20,21 @@ public class Task {
     @NotBlank(message = "Tasks description must be not null and must be not be empty")
     private String description;
     private boolean done;
+    private LocalDateTime deadline;
+//    @Transient // tego pod spodem masz Springu nie zapisywać
+    private LocalDateTime createdOn;
+    private LocalDateTime updatedOn;
 
     protected Task() {
-
     }
+
+
 
     public int getId() {
         return id;
     }
 
-    public void setId(int id) {
+    void setId(int id) {
         this.id = id;
     }
 
@@ -46,10 +54,32 @@ public class Task {
         this.done = done;
     }
 
-    public Task getThis(){
-        return this;
+    public LocalDateTime getDeadline() {
+        return deadline;
+    }
+
+    void setDeadline(final LocalDateTime deadline) {
+        this.deadline = deadline;
+    }
+
+    public void updateFrom(final Task source){
+        description = source.description;
+        done = source.done;
+        deadline = source.deadline;
+    }
+
+    @PrePersist
+    void prePersist(){
+        createdOn = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    void preMerge(){
+        updatedOn = LocalDateTime.now();
     }
 }
+
+
 
 
 

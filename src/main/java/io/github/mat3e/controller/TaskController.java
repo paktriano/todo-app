@@ -56,14 +56,17 @@ class TaskController {
         if(!repository.existsById(id)) {
             return ResponseEntity.notFound().build();
         }
-        toUpdate.setId(id);
-        repository.save(toUpdate);
+        repository.findById(id).ifPresent(task -> {
+            task.setDone(!task.isDone());
+            task.updateFrom(toUpdate);
+            repository.save(task);
+        });
         return ResponseEntity.noContent().build();
     }
 
     @Transactional
     @PatchMapping("/tasks/{id}")
-    public ResponseEntity<?> toggleTask(@PathVariable("id") int id, @RequestBody @Valid HashMap<String,Object> requestBody){
+    public ResponseEntity<?> toggleTask(@PathVariable("id") int id){
         if(!repository.existsById(id)) {
             return ResponseEntity.notFound().build();
         }

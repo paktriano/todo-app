@@ -30,4 +30,6 @@ public interface TaskRepository {
 
     void flush();
 
+    boolean existsByDoneIsFalseAndGroup_Id(Integer groupId);
+
 }

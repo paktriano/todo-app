@@ -1,16 +1,15 @@
 package io.github.mat3e.model;
 
 import org.hibernate.annotations.GenericGenerator;
-import org.springframework.data.rest.core.annotation.RestResource;
-import org.springframework.data.rest.webmvc.json.JsonSchema;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 
 @Entity
+//@Inheritance(InheritanceType.JOINED);
 @Table(name = "tasks")
-public class Task {
+public class Task{
     @Id
 //    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @GeneratedValue(generator = "inc")
@@ -22,13 +21,18 @@ public class Task {
     private boolean done;
     private LocalDateTime deadline;
 //    @Transient // tego pod spodem masz Springu nie zapisywać
-    private LocalDateTime createdOn;
-    private LocalDateTime updatedOn;
+    @Embedded
+//    @AttributeOverrides({
+//                    @AttributeOverride(column = @Column(name = "updatedOn"), name = "updatedOn")
+//    })
+    private Audit audit = new Audit();
+
+    @ManyToOne // wiele tasków do jednej grupy
+    @JoinColumn(name = "task_group_id")
+    private TaskGroup group;
 
     protected Task() {
     }
-
-
 
     public int getId() {
         return id;
@@ -62,22 +66,22 @@ public class Task {
         this.deadline = deadline;
     }
 
+    TaskGroup getGroup() {
+        return group;
+    }
+
+    void setGroup(final TaskGroup group) {
+        this.group = group;
+    }
+
     public void updateFrom(final Task source){
         description = source.description;
         done = source.done;
         deadline = source.deadline;
+        group = source.group;
     }
 
-    @PrePersist
-    void prePersist(){
-        createdOn = LocalDateTime.now();
-    }
-
-    @PreUpdate
-    void preMerge(){
-        updatedOn = LocalDateTime.now();
-    }
-}
+   }
 
 
 

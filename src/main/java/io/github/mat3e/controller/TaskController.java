@@ -33,6 +33,7 @@ class TaskController {
     @GetMapping(value = "/tasks", params = {"!sort", "!page", "!size"})
     ResponseEntity<List<Task>> readAllTasks(){
         LOGGER.warn("Exposing all the task");
+
         return ResponseEntity.ok(repository.findAll());
     }
 

@@ -4,6 +4,7 @@ import io.github.mat3e.model.Task;
 import io.github.mat3e.model.TaskRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +25,7 @@ import java.util.List;
 class TaskController {
     private static final Logger LOGGER = LoggerFactory.getLogger(TaskController.class);
     private final TaskRepository repository;
+
 
     TaskController(final TaskRepository repository) {
         this.repository = repository;

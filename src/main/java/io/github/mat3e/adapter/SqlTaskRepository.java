@@ -2,6 +2,7 @@ package io.github.mat3e.adapter;
 
 import io.github.mat3e.model.Task;
 import io.github.mat3e.model.TaskRepository;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
+//@Primary
 interface SqlTaskRepository extends TaskRepository, JpaRepository<Task, Integer> {
 //    List<Task> findByDone(@Param("state") boolean done);
 

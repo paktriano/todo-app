@@ -14,7 +14,7 @@ import org.springframework.web.context.annotation.RequestScope;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Service
+//@Service
 //@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 //@RequestScope
 public class TaskGroupService {
@@ -48,6 +48,7 @@ public class TaskGroupService {
                 .orElseThrow(() -> new IllegalArgumentException("TaskGroup with given id not found"));
         result.setDone((!result.isDone()));
         repository.save(result);
+
 
     }
 }

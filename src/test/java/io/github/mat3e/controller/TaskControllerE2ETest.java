@@ -11,8 +11,16 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.context.annotation.Primary;
 import org.springframework.test.context.ActiveProfiles;
 
+import javax.naming.directory.NoSuchAttributeException;
+import javax.persistence.SecondaryTable;
 import java.time.LocalDateTime;
+import java.util.Optional;
+import java.util.OptionalInt;
+
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
+import static org.assertj.core.api.InstanceOfAssertFactories.OPTIONAL;
+import static org.mockito.ArgumentMatchers.anyInt;
 
 //@ActiveProfiles("integration")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -40,5 +48,30 @@ class TaskControllerE2ETest {
 
         // then
         assertThat(result).hasSize(initial + 2);
+
     }
+
+    @Test
+    void httpGet_returnsSingleTaskIfExist(){
+        // given
+        int initial = repo.findAll().size();
+        var result = repo.findById(initial - 1);
+
+        // then
+        assertThat(result.get()).isInstanceOf(Task.class);
+    }
+
+    @Test
+    void httpGet_returnsSingleTaskIfNotExist(){
+        // given
+        int initial = repo.findAll().size();
+//        var result = repo.findById(initial + 1);
+
+        // when
+        var result = repo.findById(initial+1);
+
+        // then
+        assertThat(result).isEqualTo(Optional.empty());
+    }
+
 }

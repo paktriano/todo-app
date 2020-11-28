@@ -1,51 +1,51 @@
 package io.github.mat3e.controller;
 
+import io.github.mat3e.logic.TaskService;
 import io.github.mat3e.model.Task;
 import io.github.mat3e.model.TaskRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.hateoas.*;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
 import javax.validation.Valid;
 import java.net.URI;
-import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 
 //@RepositoryRestController
-@Controller
+@RestController
+@RequestMapping("/tasks")
 class TaskController {
     private static final Logger LOGGER = LoggerFactory.getLogger(TaskController.class);
     private final TaskRepository repository;
+    private final TaskService service;
 
-
-    TaskController(final TaskRepository repository) {
+    TaskController(final TaskRepository repository, final TaskService service) {
         this.repository = repository;
+        this.service = service;
     }
 
 //    @RequestMapping(method = RequestMethod.GET, path = "/tasks")
-    @GetMapping(value = "/tasks", params = {"!sort", "!page", "!size"})
-    ResponseEntity<List<Task>> readAllTasks(){
+//    @GetMapping(value = "/tasks", params = {"!sort", "!page", "!size"})
+    @GetMapping(params = {"!sort", "!page", "!size"})
+    CompletableFuture<ResponseEntity<List<Task>>> readAllTasks(){
         LOGGER.warn("Exposing all the task");
-
-        return ResponseEntity.ok(repository.findAll());
+        return service.findAllAsync().thenApply(ResponseEntity::ok);
     }
 
-    @GetMapping("/tasks")
+//    @GetMapping("/tasks")
+    @GetMapping
     ResponseEntity<List<Task>> readAllTasks(Pageable page){
         LOGGER.info("Custom pager");
         return ResponseEntity.ok(repository.findAll(page).getContent());
     }
 
-    @GetMapping("/tasks/{id}")
+//    @GetMapping("/tasks/{id}")
+    @GetMapping("/{id}")
     ResponseEntity<Task> readTask(@PathVariable int id){
         LOGGER.warn("One task is reading");
 
@@ -54,7 +54,8 @@ class TaskController {
                 .orElse(ResponseEntity.notFound().build());
 
     }
-    @PutMapping("/tasks/{id}")
+//    @PutMapping("/tasks/{id}")
+    @PutMapping("/{id}")
     ResponseEntity<?> updateTask(@PathVariable("id") int id, @RequestBody @Valid Task toUpdate){
         if(!repository.existsById(id)) {
             return ResponseEntity.notFound().build();
@@ -68,7 +69,8 @@ class TaskController {
     }
 
     @Transactional
-    @PatchMapping("/tasks/{id}")
+//    @PatchMapping("/tasks/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity<?> toggleTask(@PathVariable("id") int id){
         if(!repository.existsById(id)) {
             return ResponseEntity.notFound().build();
@@ -78,15 +80,23 @@ class TaskController {
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/tasks")
+//    @PostMapping("/tasks")
+    @PostMapping
     ResponseEntity<Task> createTask(@RequestBody @Valid Task toCreate) {
         Task result = repository.save(toCreate);
         return ResponseEntity.created(URI.create("/" + result.getId())).body(result);
     }
 
-    @GetMapping(value = "tasks/search/done", params = "state")
+    @GetMapping(value = "/search/done", params = "state")
     ResponseEntity<List<Task>> findByDone(Boolean state){
         return ResponseEntity.ok(repository.findByDone(state));
+    }
+
+    @GetMapping("/search/done")
+    ResponseEntity<List<Task>> readDoneTasks(@RequestParam(defaultValue = "true") boolean state){
+        return ResponseEntity.ok(
+                repository.findByDone(state)
+        );
     }
 
 //    @GetMapping(value = "tasks/search/done", params = "state")

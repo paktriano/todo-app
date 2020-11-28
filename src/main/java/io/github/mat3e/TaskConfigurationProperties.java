@@ -1,6 +1,7 @@
 package io.github.mat3e;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
@@ -8,6 +9,10 @@ import org.springframework.context.annotation.Configuration;
 public
 class TaskConfigurationProperties {
     private Template template;
+
+    TaskConfigurationProperties(final Template template) {
+        this.template = template;
+    }
 
     public Template getTemplate() {
         return template;
@@ -17,6 +22,7 @@ class TaskConfigurationProperties {
         this.template = template;
     }
 
+    @Configuration
     public static class Template {
         private boolean allowMultipleTasks;
 

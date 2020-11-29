@@ -1,7 +1,6 @@
 package io.github.mat3e;
 
 import io.github.mat3e.model.Task;
-import io.github.mat3e.model.TaskGroup;
 import io.github.mat3e.model.TaskRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -82,6 +81,11 @@ class TestConfiguration {
             @Override
             public boolean existsByDoneIsFalseAndGroup_Id(final Integer groupId) {
                 return false;
+            }
+
+            @Override
+            public Optional<List<Task>> findAllByGroup_Id(final Integer groupId) {
+                return null;
             }
         };
     }

@@ -22,6 +22,7 @@ public class TaskGroup {
     private String description;
     private boolean done;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "group")//fetch = FetchType.LAZY)
+//    @OneToMany(cascade = CascadeType.ALL)//fetch = FetchType.LAZY)
     private Set<Task> tasks;
     @ManyToOne
     @JoinColumn(name = "project_id")

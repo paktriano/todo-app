@@ -15,6 +15,7 @@ public class GroupReadModel {
      */
     private LocalDateTime deadline;
     private Set<GroupTaskReadModel> tasks;
+    private int id;
 
     public GroupReadModel(TaskGroup source) {
         description = source.getDescription();
@@ -25,6 +26,8 @@ public class GroupReadModel {
         tasks = source.getTasks().stream()
                 .map(GroupTaskReadModel::new)
                 .collect(Collectors.toSet());
+        id = source.getId();
+
     }
 
     public String getDescription() {
@@ -49,5 +52,13 @@ public class GroupReadModel {
 
     public void setTasks(final Set<GroupTaskReadModel> tasks) {
         this.tasks = tasks;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    void setId(final int id) {
+        this.id = id;
     }
 }

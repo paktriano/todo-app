@@ -99,6 +99,12 @@ class TaskController {
         );
     }
 
+//    @RequestMapping(method = RequestMethod.GET, path = "/search/today")
+//    ResponseEntity<List<Task>> readTasksForToday(){
+//        var undoneTasks = repository.findTasksByDoneIsFalse();
+//
+//    }
+
 //    @GetMapping(value = "tasks/search/done", params = "state")
 //    @RequestMapping(value = "tasks/search/done", params = "state")
 //    ResponseEntity<?> findByDone(Boolean state){

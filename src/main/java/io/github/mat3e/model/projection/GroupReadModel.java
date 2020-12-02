@@ -4,9 +4,7 @@ import io.github.mat3e.model.Task;
 import io.github.mat3e.model.TaskGroup;
 
 import java.time.LocalDateTime;
-import java.util.Comparator;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class GroupReadModel {
@@ -17,6 +15,7 @@ public class GroupReadModel {
      */
     private LocalDateTime deadline;
     private Set<GroupTaskReadModel> tasks;
+//    private List<GroupTaskReadModel> tasks;
 
     public GroupReadModel(TaskGroup source) {
         id = source.getId();
@@ -47,8 +46,8 @@ public class GroupReadModel {
         this.deadline = deadline;
     }
 
-    public Set<GroupTaskReadModel> getTasks() {
-        return tasks;
+    public List<GroupTaskReadModel> getTasks() {
+        return new ArrayList<>(tasks);
     }
 
     public void setTasks(final Set<GroupTaskReadModel> tasks) {

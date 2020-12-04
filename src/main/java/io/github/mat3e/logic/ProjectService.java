@@ -7,6 +7,9 @@ import io.github.mat3e.model.projection.GroupTaskWriteModel;
 import io.github.mat3e.model.projection.GroupWriteModel;
 import io.github.mat3e.model.projection.ProjectWriteModel;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -36,7 +39,7 @@ public class ProjectService {
         return repository.save(toSave.toProject());
     }
 
-    public GroupReadModel createGroup(LocalDateTime deadline, int projectId) {
+    public GroupReadModel createGroup(@NotBlank @Valid LocalDateTime deadline, int projectId) {
         if (!config.getTemplate().isAllowMultipleTasks() && taskGroupRepository.existsByDoneIsFalseAndProject_Id(projectId)) {
             throw new IllegalStateException("Only one undone group from project is allowed");
         }
@@ -52,7 +55,7 @@ public class ProjectService {
                                                 task.setDeadline(deadline.plusDays(projectStep.getDaysToDeadline()));
                                                 return task;
                                             }
-                                    ).collect(Collectors.toSet())
+                                    ).collect(Collectors.toList())
                     );
                     return taskGroupservice.createGroup(targetGroup, project);
 

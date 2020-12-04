@@ -4,6 +4,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Entity
@@ -19,6 +20,7 @@ public class Task{
     @NotBlank(message = "Tasks description must be not null and must be not be empty")
     private String description;
     private boolean done;
+
     private LocalDateTime deadline;
 //    @Transient // tego pod spodem masz Springu nie zapisywać
     @Embedded

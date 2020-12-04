@@ -4,3 +4,4 @@ https://docs.spring.io/spring-data/rest/docs/current/reference/html/#customizing
 https://docs.spring.io/spring-boot/docs/current/reference/html/appendix-application-properties.html#common-application-properties
 https://igoradamenko.github.io/awsm.css/
 https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/datetime-local
+https://docs.spring.io/spring-boot/docs/2.1.4.RELEASE/reference/html/boot-features-logging.html

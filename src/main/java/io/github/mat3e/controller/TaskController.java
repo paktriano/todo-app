@@ -5,6 +5,7 @@ import io.github.mat3e.model.Task;
 import io.github.mat3e.model.TaskRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,10 +24,12 @@ class TaskController {
     private static final Logger LOGGER = LoggerFactory.getLogger(TaskController.class);
     private final TaskRepository repository;
     private final TaskService service;
+    private final ApplicationEventPublisher eventPublisher;
 
-    TaskController(final TaskRepository repository, final TaskService service) {
+    TaskController(final TaskRepository repository, final TaskService service, final ApplicationEventPublisher eventPublisher) {
         this.repository = repository;
         this.service = service;
+        this.eventPublisher = eventPublisher;
     }
 
 //    @RequestMapping(method = RequestMethod.GET, path = "/tasks")
@@ -61,7 +64,7 @@ class TaskController {
             return ResponseEntity.notFound().build();
         }
         repository.findById(id).ifPresent(task -> {
-            task.setDone(!task.isDone());
+//            task.toggle(!task.isDone());
             task.updateFrom(toUpdate);
             repository.save(task);
         });
@@ -76,7 +79,9 @@ class TaskController {
             return ResponseEntity.notFound().build();
         }
 
-        repository.findById(id).ifPresent(task -> task.setDone(!task.isDone()));
+        repository.findById(id)
+                .map(Task::toggle)
+                .ifPresent(eventPublisher::publishEvent);
         return ResponseEntity.noContent().build();
     }
 

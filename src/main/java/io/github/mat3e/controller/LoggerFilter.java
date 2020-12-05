@@ -10,6 +10,7 @@ import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
+@IllegalExceptionProcessing
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
 class LoggerFilter implements Filter {

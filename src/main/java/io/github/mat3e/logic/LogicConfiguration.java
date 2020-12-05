@@ -6,6 +6,7 @@ import io.github.mat3e.model.TaskGroupRepository;
 import io.github.mat3e.model.TaskRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 
 @Configuration
 class LogicConfiguration {

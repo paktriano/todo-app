@@ -1,6 +1,7 @@
 package io.github.mat3e.logic;
 
 import io.github.mat3e.TaskConfigurationProperties;
+import io.github.mat3e.controller.IllegalExceptionProcessing;
 import io.github.mat3e.model.*;
 import io.github.mat3e.model.projection.GroupReadModel;
 import io.github.mat3e.model.projection.GroupTaskWriteModel;
@@ -14,6 +15,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@IllegalExceptionProcessing
 public class ProjectService {
     private ProjectRepository repository;
     private TaskGroupRepository taskGroupRepository;

@@ -4,6 +4,7 @@ import io.github.mat3e.logic.ProjectService;
 import io.github.mat3e.model.Project;
 import io.github.mat3e.model.ProjectStep;
 import io.github.mat3e.model.projection.ProjectWriteModel;
+import io.micrometer.core.annotation.Timed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.properties.bind.BindResult;
@@ -20,6 +21,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/projects")
+@IllegalExceptionProcessing
 class ProjectController {
     private final ProjectService service;
     private final Logger logger = LoggerFactory.getLogger(ProjectController.class);
@@ -59,14 +61,24 @@ class ProjectController {
         return "projects";
     }
 
-    @PostMapping(value = "/{id}")
-    String createGroup(
+    @PostMapping(value = "/fake/{id}")
+    String createGroupFake (
             @ModelAttribute("project") ProjectWriteModel current,
             Model model,
             @PathVariable("id") int id,
             @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
-                    @Valid
-                    @NotBlank
+                    LocalDateTime deadline
+    ) {
+        return createGroup(current, model, id, deadline);
+    }
+
+    @Timed(value = "project.create.group", histogram = true, percentiles = {0.5, 0.95, 0.99})
+    @PostMapping(value = "/{id}")
+    String createGroup (
+            @ModelAttribute("project") ProjectWriteModel current,
+            Model model,
+            @PathVariable("id") int id,
+            @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
                     LocalDateTime deadline
     ){
         try {
@@ -80,6 +92,7 @@ class ProjectController {
             e2.printStackTrace();
             logger.error(e2.getMessage());
         }
+
         return "projects";
     }
 

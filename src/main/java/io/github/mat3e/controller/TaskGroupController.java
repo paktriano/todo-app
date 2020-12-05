@@ -27,6 +27,7 @@ import java.util.concurrent.CompletableFuture;
 
 //@RepositoryRestController
 @Controller
+@IllegalExceptionProcessing
 @RequestMapping("/groups")
 class TaskGroupController {
     private static final Logger LOGGER = LoggerFactory.getLogger(TaskGroupController.class);
@@ -66,7 +67,6 @@ class TaskGroupController {
         return "groups";
     }
 
-
     @GetMapping(produces = MediaType.TEXT_HTML_VALUE)
     String showGroups(Model model){
         model.addAttribute("group", new GroupWriteModel());
@@ -99,15 +99,4 @@ class TaskGroupController {
         service.toggleGroup(id);
         return ResponseEntity.noContent().build();
     }
-
-    @ExceptionHandler(IllegalArgumentException.class)
-    ResponseEntity<?> handleIllegalArgument(IllegalArgumentException e){
-        return ResponseEntity.notFound().build();
-    }
-
-    @ExceptionHandler(IllegalStateException.class)
-    ResponseEntity<String> handleIllegalStateException(IllegalStateException e){
-        return ResponseEntity.badRequest().body(e.getMessage());
-    }
-
 }

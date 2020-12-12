@@ -9,6 +9,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.properties.bind.BindResult;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -16,10 +18,13 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Controller
+//@PreAuthorize("hasRole('ROLE_EDWIN')")
+@PreAuthorize("hasRole('ROLE_ADMIN')")
 @RequestMapping("/projects")
 @IllegalExceptionProcessing
 class ProjectController {
@@ -31,12 +36,18 @@ class ProjectController {
     }
 
     @GetMapping
-    String showProjects(Model model){
+    String showProjects(Model model, Authentication auth, Principal p){
+//        if (auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
+            model.addAttribute("project", new ProjectWriteModel());
+            return "projects";
+//        }
+//        return "index";
+
 //        var projectToEdit = new ProjectWriteModel();
 //        projectToEdit.setDescription("Test");
 //        model.addAttribute("project", projectToEdit);
-        model.addAttribute("project", new ProjectWriteModel());
-        return "projects";
+//        model.addAttribute("project", new ProjectWriteModel());
+//        return "index";
     }
 
     @PostMapping
